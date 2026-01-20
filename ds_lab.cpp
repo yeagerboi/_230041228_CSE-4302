@@ -1016,3 +1016,837 @@ int main() {
 
     return 0;
 }
+
+
+//bianry tree:
+
+//level order traversal of binary tree(bfs):
+#include <iostream>
+#include <queue>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* newNode(int data) {
+    Node* node = new Node();
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+void levelOrder(Node* root) {
+    if (root == NULL) return;
+
+    queue<Node*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        Node* curr = q.front();
+        q.pop();
+
+        cout << curr->data << " ";
+
+        if (curr->left)
+            q.push(curr->left);
+        if (curr->right)
+            q.push(curr->right);
+    }
+}
+
+//Level Order Traversal in Spiral Form (Zig-Zag)
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void spiralOrder(Node* root) {
+    if (root == NULL) return;
+
+    stack<Node*> s1; // Left to Right
+    stack<Node*> s2; // Right to Left
+
+    s1.push(root);
+
+    while (!s1.empty() || !s2.empty()) {
+
+        while (!s1.empty()) {
+            Node* curr = s1.top();
+            s1.pop();
+            cout << curr->data << " ";
+
+            if (curr->left)
+                s2.push(curr->left);
+            if (curr->right)
+                s2.push(curr->right);
+        }
+
+        while (!s2.empty()) {
+            Node* curr = s2.top();
+            s2.pop();
+            cout << curr->data << " ";
+
+            if (curr->right)
+                s1.push(curr->right);
+            if (curr->left)
+                s1.push(curr->left);
+        }
+    }
+}
+//Iterative Preorder Traversal:
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+void iterativePreorder(Node* root) {
+    if (root == NULL) return;
+
+    stack<Node*> st;
+    st.push(root);
+
+    while (!st.empty()) {
+        Node* curr = st.top();
+        st.pop();
+
+        cout << curr->data << " ";
+
+        if (curr->right)
+            st.push(curr->right);
+        if (curr->left)
+            st.push(curr->left);
+    }
+}
+//Iterative Inorder Traversal:
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+void iterativeInorder(Node* root) {
+    stack<Node*> st;
+    Node* curr = root;
+
+    while (curr != NULL || !st.empty()) {
+        while (curr != NULL) {
+            st.push(curr);
+            curr = curr->left;
+        }
+
+        curr = st.top();
+        st.pop();
+
+        cout << curr->data << " ";
+
+        curr = curr->right;
+    }
+}
+//Iterative Postorder Traversal using 2 stacks:
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+void postorderTwoStacks(Node* root) {
+    if (root == NULL) return;
+
+    stack<Node*> s1, s2;
+    s1.push(root);
+
+    while (!s1.empty()) {
+        Node* curr = s1.top();
+        s1.pop();
+        s2.push(curr);
+
+        if (curr->left)
+            s1.push(curr->left);
+        if (curr->right)
+            s1.push(curr->right);
+    }
+
+    while (!s2.empty()) {
+        cout << s2.top()->data << " ";
+        s2.pop();
+    }
+}
+
+//Iterative Postorder Traversal using 1 Stack:
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+
+
+void postorderOneStack(Node* root) {
+    stack<Node*> st;
+    Node* curr = root;
+    Node* lastVisited = NULL;
+
+    while (curr != NULL || !st.empty()) {
+        if (curr != NULL) {
+            st.push(curr);
+            curr = curr->left;
+        } else {
+            Node* peekNode = st.top();
+            if (peekNode->right != NULL && lastVisited != peekNode->right) {
+                curr = peekNode->right;
+            } else {
+                cout << peekNode->data << " ";
+                lastVisited = peekNode;
+                st.pop();
+            }
+        }
+    }
+}
+
+
+//Preorder, Inorder & Postorder in One Traversal
+void allTraversals(Node* root) {
+    if (root == NULL) return;
+
+    stack<pair<Node*, int>> st;
+    st.push({root, 1});
+
+    cout << "Preorder: ";
+    while (!st.empty()) {
+        auto &p = st.top();
+
+        if (p.second == 1) {
+            cout << p.first->data << " ";
+            p.second++;
+            if (p.first->left)
+                st.push({p.first->left, 1});
+        }
+        else if (p.second == 2) {
+            p.second++;
+            if (p.first->right)
+                st.push({p.first->right, 1});
+        }
+        else {
+            st.pop();
+        }
+    }
+}
+
+
+//Height of a Binary Tree
+int height(Node* root) {
+    if (root == NULL)
+        return 0;
+
+    int lh = height(root->left);
+    int rh = height(root->right);
+
+    return 1 + max(lh, rh);
+}
+//Check if Binary Tree is Height Balanced
+int check(Node* root) {
+    if (root == NULL) return 0;
+
+    int lh = check(root->left);
+    if (lh == -1) return -1;
+
+    int rh = check(root->right);
+    if (rh == -1) return -1;
+
+    if (abs(lh - rh) > 1)
+        return -1;
+
+    return 1 + max(lh, rh);
+}
+
+bool isBalanced(Node* root) {
+    return check(root) != -1;
+}
+
+//Diameter of Binary Tree
+int diameterUtil(Node* root, int &diameter) {
+    if (root == NULL)
+        return 0;
+
+    int lh = diameterUtil(root->left, diameter);
+    int rh = diameterUtil(root->right, diameter);
+
+    diameter = max(diameter, lh + rh);
+
+    return 1 + max(lh, rh);
+}
+
+int diameter(Node* root) {
+    int dia = 0;
+    diameterUtil(root, dia);
+    return dia;
+}
+
+//Maximum Path Sum (Node to Node)
+int maxPath(Node* root, int &res) {
+    if (root == NULL)
+        return 0;
+
+    int left = max(0, maxPath(root->left, res));
+    int right = max(0, maxPath(root->right, res));
+
+    res = max(res, root->data + left + right);
+
+    return root->data + max(left, right);
+}
+
+int maxPathSum(Node* root) {
+    int res = INT_MIN;
+    maxPath(root, res);
+    return res;
+}
+
+//Check if Two Trees are Identical
+bool isIdentical(Node* root1, Node* root2) {
+    if (root1 == NULL && root2 == NULL)
+        return true;
+
+    if (root1 == NULL || root2 == NULL)
+        return false;
+
+    return (root1->data == root2->data) &&
+           isIdentical(root1->left, root2->left) &&
+           isIdentical(root1->right, root2->right);
+}
+//Zig Zag Traversal of Binary Tree
+vector<int> zigZagTraversal(Node* root) {
+    vector<int> ans;
+    if (root == NULL) return ans;
+
+    queue<Node*> q;
+    q.push(root);
+    bool leftToRight = true;
+
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> level(size);
+
+        for (int i = 0; i < size; i++) {
+            Node* curr = q.front();
+            q.pop();
+
+            int index = leftToRight ? i : size - i - 1;
+            level[index] = curr->data;
+
+            if (curr->left) q.push(curr->left);
+            if (curr->right) q.push(curr->right);
+        }
+
+        leftToRight = !leftToRight;
+        for (int x : level)
+            ans.push_back(x);
+    }
+    return ans;
+}
+//Boundary Traversal of Binary Tree
+void leftBoundary(Node* root, vector<int>& ans) {
+    if (!root) return;
+    if (root->left) {
+        ans.push_back(root->data);
+        leftBoundary(root->left, ans);
+    } else if (root->right) {
+        ans.push_back(root->data);
+        leftBoundary(root->right, ans);
+    }
+}
+
+void rightBoundary(Node* root, vector<int>& ans) {
+    if (!root) return;
+    if (root->right) {
+        rightBoundary(root->right, ans);
+        ans.push_back(root->data);
+    } else if (root->left) {
+        rightBoundary(root->left, ans);
+        ans.push_back(root->data);
+    }
+}
+
+void leaves(Node* root, vector<int>& ans) {
+    if (!root) return;
+    if (!root->left && !root->right) {
+        ans.push_back(root->data);
+        return;
+    }
+    leaves(root->left, ans);
+    leaves(root->right, ans);
+}
+
+vector<int> boundaryTraversal(Node* root) {
+    vector<int> ans;
+    if (!root) return ans;
+
+    ans.push_back(root->data);
+    leftBoundary(root->left, ans);
+    leaves(root->left, ans);
+    leaves(root->right, ans);
+    rightBoundary(root->right, ans);
+
+    return ans;
+}
+//Vertical Order Traversal
+
+vector<int> verticalOrder(Node* root) {
+    map<int, vector<int>> mp;
+    queue<pair<Node*, int>> q;
+    vector<int> ans;
+
+    q.push({root, 0});
+
+    while (!q.empty()) {
+        auto p = q.front(); q.pop();
+        Node* node = p.first;
+        int hd = p.second;
+
+        mp[hd].push_back(node->data);
+
+        if (node->left)
+            q.push({node->left, hd - 1});
+        if (node->right)
+            q.push({node->right, hd + 1});
+    }
+
+    for (auto x : mp)
+        for (int v : x.second)
+            ans.push_back(v);
+
+    return ans;
+}
+//Top View of Binary Tree
+
+vector<int> topView(Node* root) {
+    map<int, int> mp;
+    queue<pair<Node*, int>> q;
+    vector<int> ans;
+
+    q.push({root, 0});
+
+    while (!q.empty()) {
+        auto p = q.front(); q.pop();
+        Node* node = p.first;
+        int hd = p.second;
+
+        if (mp.find(hd) == mp.end())
+            mp[hd] = node->data;
+
+        if (node->left)
+            q.push({node->left, hd - 1});
+        if (node->right)
+            q.push({node->right, hd + 1});
+    }
+
+    for (auto x : mp)
+        ans.push_back(x.second);
+
+    return ans;
+}
+//Bottom View of Binary Tree
+vector<int> bottomView(Node* root) {
+    map<int, int> mp;
+    queue<pair<Node*, int>> q;
+    vector<int> ans;
+
+    q.push({root, 0});
+
+    while (!q.empty()) {
+        auto p = q.front(); q.pop();
+        Node* node = p.first;
+        int hd = p.second;
+
+        mp[hd] = node->data;
+
+        if (node->left)
+            q.push({node->left, hd - 1});
+        if (node->right)
+            q.push({node->right, hd + 1});
+    }
+
+    for (auto x : mp)
+        ans.push_back(x.second);
+
+    return ans;
+}
+//Left View of Binary Tree
+void leftViewUtil(Node* root, int level, vector<int>& ans) {
+    if (!root) return;
+
+    if (level == ans.size())
+        ans.push_back(root->data);
+
+    leftViewUtil(root->left, level + 1, ans);
+    leftViewUtil(root->right, level + 1, ans);
+}
+
+vector<int> leftView(Node* root) {
+    vector<int> ans;
+    leftViewUtil(root, 0, ans);
+    return ans;
+}
+// Right View of Binary Tree
+void rightViewUtil(Node* root, int level, vector<int>& ans) {
+    if (!root) return;
+
+    if (level == ans.size())
+        ans.push_back(root->data);
+
+    rightViewUtil(root->right, level + 1, ans);
+    rightViewUtil(root->left, level + 1, ans);
+}
+
+vector<int> rightView(Node* root) {
+    vector<int> ans;
+    rightViewUtil(root, 0, ans);
+    return ans;
+}
+//Symmetric Binary Tree
+bool isMirror(Node* t1, Node* t2) {
+    if (t1 == NULL && t2 == NULL)
+        return true;
+
+    if (t1 == NULL || t2 == NULL)
+        return false;
+
+    return (t1->data == t2->data) &&
+           isMirror(t1->left, t2->right) &&
+           isMirror(t1->right, t2->left);
+}
+
+bool isSymmetric(Node* root) {
+    if (!root) return true;
+    return isMirror(root->left, root->right);
+}
+//lca:
+Node* lca(Node* root, int p, int q) {
+    if (root == NULL)
+        return NULL;
+
+    if (root->data == p || root->data == q)
+        return root;
+
+    Node* left = lca(root->left, p, q);
+    Node* right = lca(root->right, p, q);
+
+    if (left && right)
+        return root;
+
+    return (left != NULL) ? left : right;
+}
+
+//Maximum Width of a Binary Tree
+
+int maxWidth(Node* root) {
+    if (root == NULL)
+        return 0;
+
+    queue<Node*> q;
+    q.push(root);
+    int maxWidth = 0;
+
+    while (!q.empty()) {
+        int levelSize = q.size();
+        maxWidth = max(maxWidth, levelSize);
+
+        for (int i = 0; i < levelSize; i++) {
+            Node* curr = q.front();
+            q.pop();
+
+            if (curr->left)
+                q.push(curr->left);
+            if (curr->right)
+                q.push(curr->right);
+        }
+    }
+    return maxWidth;
+}
+
+//Search in a Binary Search Tree recursive sol:
+bool searchBST(Node* root, int key) {
+    if (root == NULL)
+        return false;
+
+    if (root->data == key)
+        return true;
+
+    if (key < root->data)
+        return searchBST(root->left, key);
+    else
+        return searchBST(root->right, key);
+}
+
+//Search in a Binary Search Tree iterative sol:
+bool searchBST(Node* root, int key) {
+    while (root != NULL) {
+        if (root->data == key)
+            return true;
+        else if (key < root->data)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return false;
+}
+
+//Find Minimum in a BST
+int findMin(Node* root) {
+    if (root == NULL)
+        return -1;   // or INT_MIN / error
+
+    while (root->left != NULL)
+        root = root->left;
+
+    return root->data;
+}
+//Find Maximum in a BST
+
+int findMax(Node* root) {
+    if (root == NULL)
+        return -1;   // or INT_MAX / error
+
+    while (root->right != NULL)
+        root = root->right;
+
+    return root->data;
+}
+
+
+//basic node:
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+    Node(int x) {
+        data = x;
+        left = right = NULL;
+    }
+};
+//Ceil in a Binary Search Tree
+int ceilBST(Node* root, int key) {
+    int ceil = -1;
+
+    while (root) {
+        if (root->data == key)
+            return root->data;
+        if (root->data > key) {
+            ceil = root->data;
+            root = root->left;
+        } else {
+            root = root->right;
+        }
+    }
+    return ceil;
+}
+//Floor in a Binary Search Tree
+int floorBST(Node* root, int key) {
+    int floor = -1;
+
+    while (root) {
+        if (root->data == key)
+            return root->data;
+        if (root->data < key) {
+            floor = root->data;
+            root = root->right;
+        } else {
+            root = root->left;
+        }
+    }
+    return floor;
+}
+//Insert a Node in BST
+Node* insertBST(Node* root, int key) {
+    if (root == NULL)
+        return new Node(key);
+
+    if (key < root->data)
+        root->left = insertBST(root->left, key);
+    else if (key > root->data)
+        root->right = insertBST(root->right, key);
+
+    return root;
+}
+//delete a node in BST
+Node* minValue(Node* root) {
+    while (root->left)
+        root = root->left;
+    return root;
+}
+
+Node* deleteBST(Node* root, int key) {
+    if (root == NULL)
+        return root;
+
+    if (key < root->data)
+        root->left = deleteBST(root->left, key);
+    else if (key > root->data)
+        root->right = deleteBST(root->right, key);
+    else {
+        if (!root->left)
+            return root->right;
+        else if (!root->right)
+            return root->left;
+
+        Node* temp = minValue(root->right);
+        root->data = temp->data;
+        root->right = deleteBST(root->right, temp->data);
+    }
+    return root;
+}
+//K-th Smallest Element in BST
+int kthSmallest(Node* root, int &k) {
+    if (!root) return -1;
+
+    int left = kthSmallest(root->left, k);
+    if (left != -1) return left;
+
+    k--;
+    if (k == 0) return root->data;
+
+    return kthSmallest(root->right, k);
+}
+
+//K-th Largest Element in BST
+int kthLargest(Node* root, int &k) {
+    if (!root) return -1;
+
+    int right = kthLargest(root->right, k);
+    if (right != -1) return right;
+
+    k--;
+    if (k == 0) return root->data;
+
+    return kthLargest(root->left, k);
+}
+//Check if a Tree is BST or not
+
+bool isBSTUtil(Node* root, long minVal, long maxVal) {
+    if (!root) return true;
+
+    if (root->data <= minVal || root->data >= maxVal)
+        return false;
+
+    return isBSTUtil(root->left, minVal, root->data) &&
+           isBSTUtil(root->right, root->data, maxVal);
+}
+
+bool isBST(Node* root) {
+    return isBSTUtil(root, LONG_MIN, LONG_MAX);
+}
+//LCA in Binary Search Tree
+Node* lcaBST(Node* root, int n1, int n2) {
+    while (root) {
+        if (n1 < root->data && n2 < root->data)
+            root = root->left;
+        else if (n1 > root->data && n2 > root->data)
+            root = root->right;
+        else
+            return root;
+    }
+    return NULL;
+}
+//Construct BST from Preorder Traversal
+Node* buildBST(int preorder[], int &idx, int bound, int n) {
+    if (idx == n || preorder[idx] > bound)
+        return NULL;
+
+    Node* root = new Node(preorder[idx++]);
+    root->left = buildBST(preorder, idx, root->data, n);
+    root->right = buildBST(preorder, idx, bound, n);
+
+    return root;
+}
+
+Node* bstFromPreorder(int preorder[], int n) {
+    int idx = 0;
+    return buildBST(preorder, idx, INT_MAX, n);
+}
+//Inorder Successor in BST
+Node* inorderSuccessor(Node* root, Node* p) {
+    Node* succ = NULL;
+
+    while (root) {
+        if (p->data < root->data) {
+            succ = root;
+            root = root->left;
+        } else {
+            root = root->right;
+        }
+    }
+    return succ;
+}
+//Inorder Predecessor in BST
+Node* inorderPredecessor(Node* root, Node* p) {
+    Node* pred = NULL;
+
+    while (root) {
+        if (p->data > root->data) {
+            pred = root;
+            root = root->right;
+        } else {
+            root = root->left;
+        }
+    }
+    return pred;
+}
+//Merge Two BSTs
+void inorder(Node* root, vector<int>& v) {
+    if (!root) return;
+    inorder(root->left, v);
+    v.push_back(root->data);
+    inorder(root->right, v);
+}
+
+vector<int> mergeBST(Node* root1, Node* root2) {
+    vector<int> a, b, res;
+    inorder(root1, a);
+    inorder(root2, b);
+
+    int i = 0, j = 0;
+    while (i < a.size() && j < b.size()) {
+        if (a[i] < b[j]) res.push_back(a[i++]);
+        else res.push_back(b[j++]);
+    }
+    while (i < a.size()) res.push_back(a[i++]);
+    while (j < b.size()) res.push_back(b[j++]);
+
+    return res;
+}
