@@ -1850,3 +1850,577 @@ vector<int> mergeBST(Node* root1, Node* root2) {
 
     return res;
 }
+
+
+//https://github.com/yeagerboi
+
+Introduction to LinkedList
+
+Concepts:
+
+LinkedList is a data structure where each element (node) contains data and a pointer to the next node.
+
+Struct in C/C++ is often used to define a node:
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+
+Node representation:
+
+[data | next] -> [data | next] -> NULL
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+2. Inserting a Node in LinkedList
+
+Concepts:
+
+Insertion at:
+
+Beginning
+
+End
+
+Specific position
+
+Example (insert at beginning in C++):
+
+void insertAtBeginning(Node*& head, int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = head;
+    head = newNode;
+}
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+3. Deleting a Node in LinkedList
+
+Concepts:
+
+Deletion at:
+
+Beginning
+
+End
+
+Specific position or by value
+
+Example (delete first node in C++):
+
+void deleteFirstNode(Node*& head) {
+    if (head == nullptr) return;
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+4. Find the Length of LinkedList
+
+Concepts:
+
+Traversal: go through each node until NULL
+
+Count nodes to get length
+
+Example:
+
+int length(Node* head) {
+    int count = 0;
+    Node* current = head;
+    while (current != nullptr) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+
+Difficulty: Easy
+Resources: Solve, YouTube
+
+5. Search an Element in LinkedList
+
+Concepts:
+
+Traverse and compare each node’s data with the target
+
+Example (C++):
+
+bool search(Node* head, int key) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->data == key)
+            return true;
+        current = current->next;
+    }
+    return false;
+}
+
+
+Difficulty: Easy
+Resources: Solve, YouTube
+
+If you want, I can make a complete C++ cheat sheet for all these linked list operations with code for insertion, deletion, traversal, search, and length—ready to copy and practice.
+
+Do you want me to do that?
+
+Introduction to DLL, learn about struct, and how is node represented
+Solve	Editorial	
+PostLink
+YouTube
+---
+Add Note
+Easy
+	
+Insert a node in DLL
+Solve	Editorial	
+PostLink
+YouTube
+---
+Add Note
+Easy
+	
+Delete a node in DLL
+Solve	Editorial	
+PostLink
+YouTube
+---
+Add Note
+Easy
+	
+Reverse a DLL
+
+Perfect! You’ve moved on to Doubly Linked Lists (DLL). Let’s break it down clearly and include node structure, insertion, deletion, and reversal. I’ll make it beginner-friendly with examples in C++.
+
+1. Introduction to Doubly Linked List (DLL)
+
+Concepts:
+
+A DLL is like a regular linked list, but each node has two pointers:
+
+next → points to the next node
+
+prev → points to the previous node
+
+This allows traversal in both directions.
+
+Struct Representation in C++:
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+
+Visual Representation:
+
+NULL <- [prev | data | next] <-> [prev | data | next] <-> [prev | data | next] -> NULL
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+2. Inserting a Node in DLL
+
+Common Cases:
+
+At the beginning
+
+At the end
+
+At a specific position
+
+Example: Insert at beginning
+
+void insertAtBeginning(Node*& head, int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->prev = nullptr;
+    newNode->next = head;
+
+    if (head != nullptr)
+        head->prev = newNode;
+
+    head = newNode;
+}
+
+
+Example: Insert at end
+
+void insertAtEnd(Node*& head, int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = nullptr;
+
+    if (head == nullptr) {
+        newNode->prev = nullptr;
+        head = newNode;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next != nullptr)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+3. Deleting a Node in DLL
+
+Common Cases:
+
+Delete the first node
+
+Delete the last node
+
+Delete a node with a specific value
+
+Example: Delete a node by value
+
+void deleteNode(Node*& head, int key) {
+    Node* temp = head;
+
+    // Find the node to delete
+    while (temp != nullptr && temp->data != key)
+        temp = temp->next;
+
+    if (temp == nullptr) return; // Node not found
+
+    if (temp->prev != nullptr)
+        temp->prev->next = temp->next;
+    else
+        head = temp->next; // Node is head
+
+    if (temp->next != nullptr)
+        temp->next->prev = temp->prev;
+
+    delete temp;
+}
+
+
+Difficulty: Easy
+Resources: Solve, Editorial, YouTube
+
+4. Reverse a Doubly Linked List
+
+Concept:
+
+Swap next and prev for each node
+
+Move head to the last node
+
+Example:
+
+void reverseDLL(Node*& head) {
+    Node* temp = nullptr;
+    Node* current = head;
+
+    while (current != nullptr) {
+        temp = current->prev;
+        current->prev = current->next;
+        current->next = temp;
+        current = current->prev;
+    }
+
+    if (temp != nullptr)
+        head = temp->prev;
+}
+
+1. Middle of a LinkedList [Tortoise-Hare / Slow-Fast Pointer Method]
+
+Concept:
+
+Use two pointers:
+
+slow → moves 1 step
+
+fast → moves 2 steps
+
+When fast reaches the end, slow is at the middle.
+
+Example:
+
+Node* findMiddle(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    return slow; // Middle node
+}
+
+
+Time Complexity: O(n), Space: O(1)
+
+2. Reverse a LinkedList
+Iterative
+Node* reverseIterative(Node* head) {
+    Node* prev = nullptr;
+    Node* current = head;
+
+    while (current != nullptr) {
+        Node* nextNode = current->next;
+        current->next = prev;
+        prev = current;
+        current = nextNode;
+    }
+
+    return prev; // New head
+}
+
+Recursive
+Node* reverseRecursive(Node* head) {
+    if (head == nullptr || head->next == nullptr) return head;
+
+    Node* rest = reverseRecursive(head->next);
+    head->next->next = head;
+    head->next = nullptr;
+
+    return rest;
+}
+
+
+Time Complexity: O(n), Space Complexity: O(n) for recursion
+
+3. Detect a Loop in LinkedList
+
+Floyd’s Cycle Detection
+
+bool detectLoop(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != nullptr && fast->next != nullptr) {
+        slow = slow->next;
+        fast = fast->next->next;
+
+        if (slow == fast)
+            return true;
+    }
+    return false;
+}
+
+
+Time Complexity: O(n), Space: O(1)
+
+4. Find Starting Point of Loop
+Node* findLoopStart(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+
+    // Detect loop
+    do {
+        if (!fast || !fast->next) return nullptr;
+        slow = slow->next;
+        fast = fast->next->next;
+    } while (slow != fast);
+
+    // Find start
+    slow = head;
+    while (slow != fast) {
+        slow = slow->next;
+        fast = fast->next;
+    }
+    return slow;
+}
+
+5. Length of Loop
+int loopLength(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            int len = 1;
+            Node* temp = slow;
+            while (temp->next != slow) {
+                temp = temp->next;
+                len++;
+            }
+            return len;
+        }
+    }
+    return 0; // No loop
+}
+
+6. Check if LL is Palindrome
+
+Method:
+
+Find middle (Tortoise-Hare)
+
+Reverse second half
+
+Compare both halves
+
+7. Segregate Odd and Even Nodes
+
+Move even nodes after odd nodes
+
+Maintain relative order
+
+8. Remove Nth Node from End
+Node* removeNthFromEnd(Node* head, int n) {
+    Node dummy;
+    dummy.next = head;
+    Node* first = &dummy;
+    Node* second = &dummy;
+
+    for (int i = 0; i <= n; i++) first = first->next;
+    while (first != nullptr) {
+        first = first->next;
+        second = second->next;
+    }
+
+    Node* toDelete = second->next;
+    second->next = second->next->next;
+    delete toDelete;
+
+    return dummy.next;
+}
+
+9. Delete Middle Node
+
+Use Tortoise-Hare to find middle
+
+Remove middle node by adjusting pointers
+
+10. Sort LinkedList
+
+Approach: Merge sort (O(n log n))
+
+For 0,1,2 nodes: counting or link rearrangement
+
+11. Intersection of Y-shaped LL
+
+Calculate lengths of both lists
+
+Move longer list pointer forward by difference
+
+Traverse together to find intersection
+
+12. Add 1 / Add 2 numbers represented by LL
+
+Reverse the LL
+
+Add number with carry
+
+Reverse back
+
+1. Delete All Occurrences of a Key in DLL (Hard)
+
+Concept:
+
+Traverse the DLL and delete every node with the given value.
+
+Handle head, tail, and middle nodes carefully.
+
+C++ Example:
+
+void deleteAllOccurrences(Node*& head, int key) {
+    Node* current = head;
+
+    while (current != nullptr) {
+        Node* nextNode = current->next;
+
+        if (current->data == key) {
+            if (current->prev != nullptr)
+                current->prev->next = current->next;
+            else
+                head = current->next; // current is head
+
+            if (current->next != nullptr)
+                current->next->prev = current->prev;
+
+            delete current;
+        }
+
+        current = nextNode;
+    }
+}
+
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+2. Find Pairs with Given Sum in DLL (Medium)
+
+Concept:
+
+Use two pointers (start and end) because DLL allows backward traversal.
+
+Move pointers toward each other to find all pairs that sum up to a given value.
+
+C++ Example:
+
+void findPairs(Node* head, int target) {
+    Node* start = head;
+    Node* end = head;
+
+    // Move end to last node
+    while (end->next != nullptr) end = end->next;
+
+    while (start != nullptr && end != nullptr && start != end && end->next != start) {
+        int sum = start->data + end->data;
+        if (sum == target) {
+            cout << "(" << start->data << ", " << end->data << ")\n";
+            start = start->next;
+            end = end->prev;
+        } else if (sum < target) {
+            start = start->next;
+        } else {
+            end = end->prev;
+        }
+    }
+}
+
+
+Time Complexity: O(n)
+Space Complexity: O(1)
+
+3. Remove Duplicates from Sorted DLL
+
+Concept:
+
+Traverse the list and remove consecutive nodes with the same value.
+
+C++ Example:
+
+void removeDuplicates(Node* head) {
+    Node* current = head;
+
+    while (current != nullptr && current->next != nullptr) {
+        if (current->data == current->next->data) {
+            Node* duplicate = current->next;
+            current->next = duplicate->next;
+            if (duplicate->next != nullptr)
+                duplicate->next->prev = current;
+            delete duplicate;
+        } else {
+            current = current->next;
+        }
+    }
+}
