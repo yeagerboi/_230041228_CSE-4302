@@ -2424,3 +2424,30 @@ void removeDuplicates(Node* head) {
         }
     }
 }
+
+
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+bool findSumBST(Node* root, int target, unordered_set<int>& s) {
+    if (!root) return false;
+
+    if (s.find(target - root->data) != s.end())
+        return true;
+
+    s.insert(root->data);
+
+    return findSumBST(root->left, target, s) || findSumBST(root->right, target, s);
+}
+
+bool isSumExists(Node* root, int target) {
+    unordered_set<int> s;
+    return findSumBST(root, target, s);
+}
